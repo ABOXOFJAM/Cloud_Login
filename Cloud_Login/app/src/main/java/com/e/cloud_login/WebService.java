@@ -1,6 +1,7 @@
 package com.e.cloud_login;
 
 import com.e.cloud_login.Data.JSON.FindPassWordJson;
+import com.e.cloud_login.Data.JSON.LoadFilesJson;
 import com.e.cloud_login.Data.JSON.LoginJson;
 import com.e.cloud_login.Data.JSON.RegisterJson;
 import com.google.gson.Gson;
@@ -10,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -21,6 +23,10 @@ public interface WebService {
     Call<RegisterJson> userRegiser(@Query("username")String username,
                                    @Query("password")String password,
                                    @Query("email") String email);
+    @POST("getFileInformation")
+    Call<LoadFilesJson> getFileInformation(@Query("username") String username,
+                                           @Query("parentFile")String parentFile,
+                                           @Header("token") String token);
     @POST("sendEmail")
     Call<FindPassWordJson> userGetEmail(@Query("username") String username);
 //    @POST("changePassword")
