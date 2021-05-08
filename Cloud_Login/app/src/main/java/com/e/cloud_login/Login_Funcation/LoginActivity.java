@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,14 +48,17 @@ public class LoginActivity extends AppCompatActivity {
         String uname =met_username.getText().toString();
         String pword =met_password.getText().toString();
         AccountLogin alogin = new AccountLogin();
+        Intent intent = new Intent();
         Runnable runnable =new Runnable() {
             @Override
             public void run() {
                 try {
                     alogin.accountLogin(uname, pword);
+                    intent.putExtra("token",alogin.token);//将获得到的token传给别的activity
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
             }
         };
         Thread thread =new Thread(runnable);
@@ -64,7 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         Log.i(alogin.token,alogin.token+"————测试—————");
         if(alogin.status&&alogin.token!=null&&alogin.user!=null){
             Toast.makeText(LoginActivity.this, "登入成功", Toast.LENGTH_SHORT).show();
-            //设置登入状态??
+            //设置登入状态
+            //将这个userinfo传入别的Activity
             SharedPreferences.Editor userinfo = this.getSharedPreferences("登入状态", Context.MODE_PRIVATE).edit();
             userinfo.putBoolean("STATE",true);
             userinfo.putString("ID",uname);

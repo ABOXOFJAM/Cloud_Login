@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import retrofit2.Call;
 /*******此函数为与登入有关功能的实现********/
-public class AccountLogin<res>
+public class AccountLogin
 {
     public User user=null;
     public Boolean status=null ;

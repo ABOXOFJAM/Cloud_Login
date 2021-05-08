@@ -1,7 +1,7 @@
 package com.e.cloud_login.Data;
 
 import com.google.gson.annotations.Expose;
-
+/*******文件的信息*******/
 public class FileData {
     String url;
     String username;
