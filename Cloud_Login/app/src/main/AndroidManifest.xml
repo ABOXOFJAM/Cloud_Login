@@ -13,15 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Main_Funcation.HomeActivity"></activity>
-        <activity android:name=".Login_Funcation.FindPasswordActivity" />
-        <activity android:name=".Login_Funcation.RegisterActivity" />
-        <activity android:name=".Login_Funcation.LoginActivity">
+        <activity android:name=".Main_Funcation.GuideActivity"></activity>
+        <activity android:name=".Main_Funcation.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Main_Funcation.HomeActivity" />
+        <activity android:name=".Login_Funcation.FindPasswordActivity" />
+        <activity android:name=".Login_Funcation.RegisterActivity" />
+        <activity android:name=".Login_Funcation.LoginActivity">
         </activity>
     </application>
 
