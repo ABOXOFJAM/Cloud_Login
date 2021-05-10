@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.e.cloud_login.Login_Funcation.LoginActivity;
 import com.e.cloud_login.R;
 
 public class SplashActivity extends Activity {
@@ -26,7 +27,7 @@ public class SplashActivity extends Activity {
      * 设置动画渐变效果
      */
     public void setAnimation(){
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.3f,0.1f);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f,1f);
         alphaAnimation.setDuration(3000);
         //给布局设置动画效果
         linearLayout.setAnimation(alphaAnimation);
@@ -53,8 +54,11 @@ public class SplashActivity extends Activity {
         //获取isFirst的值,这个值在GuideActivity设置
         Intent intent =new Intent();
 //        if("0".equals(First)){
-            intent.setClass(this,HomeActivity.class);
+            intent.setClass(this, HomeActivity.class);
 //        }
+        //如果登入了就直接进主页面
+        //如果登出后退出app继续进入登入页面
+        //如果没注册过就进入注册界面
 //        else{
 //            intent.setClass(this, GuideActivity.class);
 //        }

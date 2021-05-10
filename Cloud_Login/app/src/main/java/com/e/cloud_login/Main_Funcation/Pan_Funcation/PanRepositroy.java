@@ -289,7 +289,7 @@ public class PanRepositroy {
             InputStream inputStream =null;
             OutputStream outputStream =null;
            try{
-               byte[] fileReader = ;
+               byte[] fileReader = {};
 
             long fileSize = body.contentLength();
             long fileSizeDownloaded = 0;
