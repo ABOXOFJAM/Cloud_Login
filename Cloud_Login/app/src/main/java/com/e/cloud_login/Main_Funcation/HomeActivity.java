@@ -17,6 +17,7 @@ import com.e.cloud_login.Fragment.AddFragment;
 import com.e.cloud_login.Fragment.FileFragment;
 import com.e.cloud_login.Fragment.HomeFragment;
 import com.e.cloud_login.Fragment.MineFragment;
+import com.e.cloud_login.Fragment.PhotoFragment;
 import com.e.cloud_login.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -44,10 +45,10 @@ public class HomeActivity extends AppCompatActivity {
      */
     public void initData(){
         fragmentList = new ArrayList<>();
+        fragmentList.add(new HomeFragment());
         fragmentList.add(new FileFragment());
-        fragmentList.add(new HomeFragment());
         fragmentList.add(new AddFragment());
-        fragmentList.add(new HomeFragment());
+        fragmentList.add(new PhotoFragment());
         fragmentList.add(new MineFragment());
         MainTabAdapter mainTabAdapter = new MainTabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainTabAdapter);
@@ -112,6 +113,7 @@ public class HomeActivity extends AppCompatActivity {
             ImageView imageView = view.findViewById(R.id.home_tab_img);
             TextView textView = view.findViewById(R.id.home_tab_tv);
             textView.setTextColor(tabLayout.getTabTextColors());
+            textView.setText(titles[position]);
             return view;
         }
     }
