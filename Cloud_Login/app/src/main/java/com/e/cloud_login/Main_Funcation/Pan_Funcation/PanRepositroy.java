@@ -41,10 +41,15 @@ public class PanRepositroy {
     String DOWNLOAD_PATH = null;
     MutableLiveData<String> current_dir = new MutableLiveData<>();//存储最近的目录
     Stack<String> parent_dir =new Stack<String>();
-    MutableLiveData<Boolean> flushCheck = new MutableLiveData<>();//检测flushCheck的状态，如果改变就刷新,设置观察者
+    MutableLiveData<Boolean> flushCheck = new MutableLiveData<>();//检测flushCheck的状态，如果改变就刷新,需要设置观察者
     private WebService panService =WebService.create();
     MutableLiveData<Integer> selectedCount = new MutableLiveData<>();//勾选的项
     ArrayList<FileData> selectedItem =new ArrayList<FileData>();
+    public PanRepositroy(){
+        current_dir.setValue("/ck/data");
+        flushCheck.setValue(false);
+        selectedCount.setValue(0);
+    }
     void selectedItemAdd(FileData fileData){
         selectedItem.add(fileData);
         selectedCount.setValue(selectedItem.size());
@@ -57,8 +62,7 @@ public class PanRepositroy {
         return selectedItem.contains(fileData);
     }
     void selectedItemAddAll(List<FileData> fileData){
-        for (FileData file: fileData
-        ) {
+        for (FileData file: fileData) {
             if(!selectedItemExists(file)) selectedItemAdd(file);
         }
     }
@@ -241,7 +245,33 @@ public class PanRepositroy {
             }
         });
     }
-    void downloadFile(Context context,String username ,String url){
+    void downloadFile(Context context,String username ,String url,String filename){
+        Call<ResponseBody> download = panService.downloadFile(username,url,token);
+        download.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                ResponseBody body = response.body();
+                if(body!=null){
+                    String fe = filename;
+                    int i = 1;
+                    String[] hp = filename.split(".");
+                    while(new File("$DOWNLOAD_PATH/$fe").exists()){
+                        fe= "${hp[0]}(${i}).${hp[i]}";
+                                i+=1;
+                    }
+                    writeResponseBodyToDisk(body,"$DOWNLOAD_PATH/$fe");
+                    Toast.makeText(context,"下载成功",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(context,"下载失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                  Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     void changeFilename(Context context,String username,String newFilename,String url){
        Call<ChangeFileNameJson> change = panService.changeFilename(username,newFilename,url,token);

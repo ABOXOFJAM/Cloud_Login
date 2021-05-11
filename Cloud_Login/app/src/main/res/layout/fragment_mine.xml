@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:gravity="center"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="我的"
-        android:id="@+id/fg_mine_tv"
-        android:textSize="50dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="150dp">
+        <ImageView
+            android:id="@+id/fg_mine_head"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/cathead"/>
+        <TextView
+            android:id="@+id/fg_mine_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:text="个人详细信息"
+            android:background="@drawable/shape_round"/>
+        <TextView
+            android:id="@+id/fg_mine_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:background="@drawable/shape_round"/>
+    </LinearLayout>
 </LinearLayout>

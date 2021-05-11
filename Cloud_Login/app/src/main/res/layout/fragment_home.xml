@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/fg_home_head"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:orientation="horizontal">
 
         <EditText

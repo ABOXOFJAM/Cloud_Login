@@ -43,7 +43,7 @@ public class HomeFragment extends BaseFragment {
 
 
     /**
-     * 我也不知道这个函数拿来干蛤
+     * 往List里面加元素
      */
     @Override
     public void initData() {
