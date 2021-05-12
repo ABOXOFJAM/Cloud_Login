@@ -7,6 +7,7 @@ import com.e.cloud_login.Data.JSON.DeletePackageJson;
 import com.e.cloud_login.Data.JSON.FindPassWordJson;
 import com.e.cloud_login.Data.JSON.LoadFilesJson;
 import com.e.cloud_login.Data.JSON.LoginJson;
+import com.e.cloud_login.Data.JSON.PhotoJson;
 import com.e.cloud_login.Data.JSON.RegisterJson;
 import com.e.cloud_login.Data.JSON.UploadFileJson;
 import com.google.gson.Gson;
@@ -69,12 +70,23 @@ public interface WebService {
                                    @Query("url")String url,
                                    @Header("token")String token);
 
+    /**
+     * 从服务端接收上传的头像，比如换手机的时候
+     * @param username
+     * @return
+     */
+    @POST("getPhoto")
+    Call<ResponseBody> getUserPhoto(@Query("username")String username);
+    @Multipart
+    @POST("photoUpload")
+    Call<PhotoJson> userPhoto(@Part MultipartBody.Part file,@Part("username") String username);
+
      static WebService create(){//Retrofit的实例化
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://47.115.128.193:8081/")//baseurl
+                .baseUrl("www.rat403.cn/")//baseurl
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
          WebService accountService =retrofit.create(WebService.class);

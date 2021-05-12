@@ -1,6 +1,7 @@
 package com.e.cloud_login.Fragment;
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,4 +56,6 @@ public class HomeFragment extends BaseFragment {
         filelistBean.setTime_now("1");
         list.add(filelistBean);
     }
+    //private Pair<Boolean,Pair<String,String>> getLoginState(){
+    //}
 }

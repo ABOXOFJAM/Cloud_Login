@@ -313,7 +313,7 @@ public class PanRepositroy {
            }
        });
     }
-    Boolean writeResponseBodyToDisk(ResponseBody body,String filepath){
+    public Boolean writeResponseBodyToDisk(ResponseBody body,String filepath){
         try {
             File futureStudioIconFile = new File(filepath);
             InputStream inputStream =null;

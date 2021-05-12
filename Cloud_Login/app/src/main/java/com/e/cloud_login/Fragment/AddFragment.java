@@ -12,6 +12,9 @@ public class AddFragment extends BaseFragment{
     public View initView() {
         View view = View.inflate(getActivity(), R.layout.fragment_add,null);
         tv = view.findViewById(R.id.fg_add_title);
+        //String PATH =;
+        //String PORTRAIT =;
+
         return view;
     }
 
