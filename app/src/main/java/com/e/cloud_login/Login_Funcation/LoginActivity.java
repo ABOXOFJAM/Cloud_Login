@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
+        //
         met_username = findViewById(R.id.et_username);
         met_password = findViewById(R.id.et_password);
         mbtn_start =findViewById(R.id.btn_start);
