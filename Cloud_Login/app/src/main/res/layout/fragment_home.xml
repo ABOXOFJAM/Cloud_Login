@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/fg_home_head"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fg_home_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/fg_home_btn_send"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="传输" />
+
+        <Button
+            android:id="@+id/fg_home_btn_scan"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="扫一扫" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fg_home_tv"
+        android:layout_margin="40dp"
+        android:background="@drawable/shape_round"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:text="主页"
+        android:gravity="center"
+        android:textSize="50dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/fg_home_tv_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最近"
+                android:layout_marginLeft="30dp"
+                android:textSize="30dp"/>
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/fg_home_btn_detail"
+                android:text="查看全
+                              部内容"
+                android:layout_marginLeft="200dp"/>
+        </LinearLayout>
+        <ListView
+            android:id="@+id/fg_home_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</LinearLayout>

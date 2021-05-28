@@ -1,14 +1,21 @@
 package com.e.cloud_login.Login_Funcation;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,24 +29,33 @@ public class LoginActivity extends AppCompatActivity {
     EditText met_username,met_password;
     Button mbtn_start;
     TextView mtv_register,mtv_title,mtv_phone;
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.slide);
+        //退出时使用
+        getWindow().setExitTransition(explode);
+        //第一次进入时使用
+        //getWindow().setEnterTransition(explode);
+        //再次进入时使用
+        getWindow().setReenterTransition(explode);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if(getSupportActionBar()!=null){
             getSupportActionBar().hide();
         }
-        //
         met_username = findViewById(R.id.et_username);
         met_password = findViewById(R.id.et_password);
         mbtn_start =findViewById(R.id.btn_start);
         mtv_register=findViewById(R.id.tv_register);
         mtv_title =findViewById(R.id.login_title);
-        mtv_title = findViewById(R.id.login_tv_phone);
+        mtv_phone = findViewById(R.id.login_tv_phone);
         mtv_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(LoginActivity.this,PhoneLoginActivity.class);
+                startActivity(intent);
             }
         });
         mbtn_start.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +71,10 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.text);
+        animation.setDuration(1000);
+        mtv_title.startAnimation(animation);//開始动画
+
     }
     /*****登入按钮*****/
     public void login_btn_start(){

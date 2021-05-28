@@ -1,28 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:background="@drawable/shape_mine"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="150dp">
+        android:layout_height="250dp">
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fg_mine_name"
+                android:text="用户名"
+                android:textColor="#101010"
+                android:textStyle="bold"
+                android:textSize="26dp"/>
+            <TextView
+                android:id="@+id/fg_mine_sign"
+                android:textSize="14dp"
+                android:layout_marginTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="今天又是快乐学学习的一天!"
+                android:textColor="#D5D5D5"/>
+            </LinearLayout>
         <ImageView
+            android:layout_marginLeft="80dp"
             android:id="@+id/fg_mine_head"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:src="@drawable/cathead"/>
-        <TextView
-            android:id="@+id/fg_mine_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:text="个人详细信息"
-            android:background="@drawable/shape_round"/>
-        <TextView
-            android:id="@+id/fg_mine_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="设置"
-            android:background="@drawable/shape_round"/>
+        </LinearLayout>
+        </LinearLayout>
+
+       <LinearLayout
+        android:padding="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+           <LinearLayout
+               android:layout_weight="1"
+               android:gravity="center"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+                   android:id="@+id/fg_mine_img_cloud"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:background="@drawable/ic_cloud"/>
+               <TextView
+                   android:id="@+id/fg_mine_tv_cloud"
+                   android:layout_marginTop="6dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="历史下载"
+                   android:textSize="12dp"/>
+           </LinearLayout>
+           <LinearLayout
+
+               android:layout_weight="1"
+               android:gravity="center"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+                   android:id="@+id/fg_mine_img_outlet"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:background="@drawable/ic_outlet"/>
+               <TextView
+                   android:id="@+id/fg_mine_tv_outlet"
+                   android:layout_marginTop="6dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="审核进度"
+                   android:textSize="12dp"/>
+           </LinearLayout>
+           <LinearLayout
+               android:layout_weight="1"
+               android:gravity="center"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+                   android:id="@+id/fg_mine_img_service"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:background="@drawable/ic_service"/>
+               <TextView
+                   android:id="@+id/fg_mine_tv_service"
+                   android:layout_marginTop="6dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="帮助反馈"
+                   android:textSize="12dp"/>
+           </LinearLayout>
+           <LinearLayout
+               android:layout_weight="1"
+               android:gravity="center"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+                   android:id="@+id/fg_mine_img_setting"
+                   android:layout_width="30dp"
+                   android:layout_height="30dp"
+                   android:background="@drawable/ic_settings"/>
+               <TextView
+                   android:id="@+id/fg_mine_tv_setting"
+                   android:layout_marginTop="6dp"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="设置中心"
+                   android:textSize="12dp"/>
+           </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/fg_mine_btn_file"
+            android:layout_marginRight="10dp"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:text="我的文献"
+            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_btn_black"/>
+
+    </LinearLayout>
+
 </LinearLayout>

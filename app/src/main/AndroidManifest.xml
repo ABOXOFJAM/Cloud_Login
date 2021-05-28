@@ -13,8 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Main_Funcation.GuideActivity"></activity>
-        <activity android:name=".Main_Funcation.SplashActivity" >
+        <activity android:name=".Main_Funcation.SettingActivity"></activity>
+        <activity android:name=".Login_Funcation.PhoneLoginActivity" />
+        <activity android:name=".Main_Funcation.GuideActivity" />
+        <activity android:name=".Main_Funcation.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,8 +26,7 @@
         <activity android:name=".Main_Funcation.HomeActivity" />
         <activity android:name=".Login_Funcation.FindPasswordActivity" />
         <activity android:name=".Login_Funcation.RegisterActivity" />
-        <activity android:name=".Login_Funcation.LoginActivity">
-        </activity>
+        <activity android:name=".Login_Funcation.LoginActivity" />
     </application>
 
 </manifest>

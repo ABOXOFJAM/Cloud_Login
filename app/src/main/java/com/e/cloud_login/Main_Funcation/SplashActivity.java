@@ -59,19 +59,19 @@ public class SplashActivity extends Activity {
         });
     }
     public void selectActivity(){
-        SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-        String First = sharedPreferences.getString("isFirst","0");//设置是否第一次访问
-        //获取isFirst的值,这个值在GuideActivity设置
+        SharedPreferences sharedPreferences = getSharedPreferences("登入状态",MODE_PRIVATE);
+        Boolean First = sharedPreferences.getBoolean("STATE",false);//第二个参数为默认
+        //查询是否登入过
         Intent intent =new Intent();
-//        if("0".equals(First)){
+        if(!First){
             intent.setClass(this, LoginActivity.class);
-//        }
+        }
         //如果登入了就直接进主页面
         //如果登出后退出app继续进入登入页面
         //如果没注册过就进入注册界面
-//        else{
-//            intent.setClass(this, GuideActivity.class);
-//        }
+        else{
+            intent.setClass(this, HomeActivity.class);
+        }
         /**
          * 询问储存权限
          */

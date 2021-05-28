@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@drawable/background"
     android:layout_height="match_parent">
    <LinearLayout
        android:layout_width="match_parent"
@@ -12,12 +13,15 @@
            android:id="@+id/splash_iv"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:src="@drawable/cathead"/>
+           android:src="@drawable/ic_splash"/>
        <TextView
+           android:layout_marginTop="30dp"
+           android:textStyle="bold"
+           android:textColor="@color/black"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="这是闪屏幕页"
-           android:textSize="50dp"
+           android:text="打开XX，寻你所求"
+           android:textSize="20dp"
            android:gravity="center"/>
    </LinearLayout>
 </LinearLayout>

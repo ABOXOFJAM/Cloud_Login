@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.cache.DiskCache;
 import com.e.cloud_login.Data.JSON.PhotoJson;
 import com.e.cloud_login.Login_Funcation.AccountLogin;
+import com.e.cloud_login.Main_Funcation.SettingActivity;
 import com.e.cloud_login.R;
 
 
@@ -37,11 +39,14 @@ import retrofit2.Call;
 import static android.app.Activity.RESULT_OK;
 import static com.e.cloud_login.R.*;
 import static com.e.cloud_login.R.id.fg_mine_head;
+import static com.e.cloud_login.R.id.fg_mine_img_setting;
+import static com.e.cloud_login.R.id.fg_mine_tv_setting;
 
 public class MineFragment extends BaseFragment {
     private AccountLogin accountService = new AccountLogin();
-    private TextView detail,setting;
-    private ImageView head;
+    private TextView tv_name,tv_sign,tv_cloud,tv_outlet,tv_service,tv_setting;
+    private ImageView img_head,img_cloud,img_outlet,img_service,img_setting;
+    private Button btn_file;
     private String LOGIN_STATE ="login_state";
     private File imageFile = null;//操作的图片对象
     private Uri imageUri = null; //裁剪后的图片URI
@@ -54,20 +59,48 @@ public class MineFragment extends BaseFragment {
     @Override
     public View initView() {
         View view = View.inflate(getActivity(), layout.fragment_mine,null);
-        detail = view.findViewById(id.fg_mine_detail);
-        setting = view.findViewById(id.fg_mine_setting);
-        head = view.findViewById(fg_mine_head);
+        tv_name = view.findViewById(R.id.fg_mine_name);
+        tv_sign = view.findViewById(R.id.fg_mine_sign);
+        tv_cloud =view.findViewById(R.id.fg_mine_tv_cloud);
+        tv_outlet = view.findViewById(R.id.fg_mine_tv_outlet);
+        tv_service = view.findViewById(R.id.fg_mine_tv_service);
+        tv_setting = view.findViewById(R.id.fg_mine_tv_setting);
+        img_head  = view.findViewById(R.id.fg_mine_head);
+        img_cloud= view.findViewById(R.id.fg_mine_img_cloud);
+        img_outlet = view.findViewById(R.id.fg_mine_img_outlet);
+        img_service = view.findViewById(R.id.fg_mine_img_service);
+        img_setting = view.findViewById(R.id.fg_mine_img_setting);
+        btn_file = view.findViewById(R.id.fg_mine_btn_file);
         setClickEvent();
         return view;
     }
     private void setClickEvent(){
-        head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Head","更新头像，按下");
-                gallery();
+        onClick onclick = new onClick();
+        img_head.setOnClickListener(onclick);
+        img_setting.setOnClickListener(onclick);
+        tv_setting.setOnClickListener(onclick);
+    }
+    public class onClick implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent();
+            switch (v.getId()){
+                case fg_mine_head:{
+                    Log.d("head","更新头像，按下");
+                    gallery();
+                    break;
+                }
+                case fg_mine_img_setting:{
+                   intent.setClass(getContext(), SettingActivity.class);
+                   startActivity(intent);
+                }
+                case fg_mine_tv_setting:{
+                    intent.setClass(getContext(), SettingActivity.class);
+                    startActivity(intent);
+                }
             }
-        });
+        }
     }
     @Override
     public void initData() {
@@ -173,7 +206,7 @@ public class MineFragment extends BaseFragment {
                     .placeholder(drawable.ic_launcher_background)
                     .error(drawable.cathead)
                     .centerCrop()
-                    .into(head);
+                    .into(img_head);
         }
         else {//如果加载头像不成功，则显示默认图片
             Log.d("PORTRAIT_TEXT","加载头像失败");
@@ -187,7 +220,7 @@ public class MineFragment extends BaseFragment {
                         .placeholder(drawable.ic_launcher_background)
                         .error(drawable.cathead)
                         .centerCrop()
-                        .into(head);
+                        .into(img_head);
             }
         }
     }
