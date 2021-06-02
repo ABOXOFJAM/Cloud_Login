@@ -4,12 +4,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/home_vp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加"
+        android:id="@+id/home_add"/>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/home_tablayout"
         android:layout_width="match_parent"

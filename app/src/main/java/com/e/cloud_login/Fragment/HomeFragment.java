@@ -1,43 +1,46 @@
 package com.e.cloud_login.Fragment;
 
-import android.app.ActionBar;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.e.cloud_login.Adapter.FileListBeanAdapter;
 import com.e.cloud_login.Adapter.SearchWordsAdapter;
 import com.e.cloud_login.Data.FilelistBean;
 import com.e.cloud_login.Data.SearchWords;
-import com.e.cloud_login.Main_Funcation.HomeActivity;
 import com.e.cloud_login.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.e.cloud_login.R.id.fg_home_et;
 
 public class HomeFragment extends BaseFragment {
     private TextView tv1,tv2,tv_cancel;
     private EditText editText;
     private ImageButton btn_scan,btn_search;
     private PopupWindow mPopWindow;
-    GridView gridView_hot,gridView_recent,gridView_file;
+    private final int ADD_PDF_CODE = 0x01;
+    GridView gridView_hot,gridView_recent;
+    RecyclerView recyclerView_file;
     LinearLayout linearLayout;
+    private String pdf_url;
     int mHeight;
     private List<SearchWords> list = new ArrayList<>();
     private List<FilelistBean> beanList = new ArrayList<>();
@@ -47,29 +50,39 @@ public class HomeFragment extends BaseFragment {
          * 在Fragment里面添加控件一定要在这里声明
          * 因为在BaseFragment里面的onCreateView里面返回的是initView()
          */
+        Onclick onclick = new Onclick();
         View view = View.inflate(getActivity(), R.layout.fragment_home,null);
         tv1 = view.findViewById(R.id.home_tv_hot);
         tv2 = view.findViewById(R.id.home_tv_recent);
         tv_cancel = view.findViewById(R.id.home_tv_cancel);
-        editText =view.findViewById(R.id.fg_home_et);
-        gridView_file = view.findViewById(R.id.home_gv_file);
-        FileListBeanAdapter adapter = new FileListBeanAdapter(getContext(),R.layout.bean_file,beanList);
-        gridView_file.setAdapter(adapter);
+        editText =view.findViewById(fg_home_et);
+        recyclerView_file = view.findViewById(R.id.home_rv_file);
+        FileListBeanAdapter adapter = new FileListBeanAdapter(beanList);
+        recyclerView_file.setAdapter(adapter);
+        recyclerView_file.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recyclerView_file.addItemDecoration(new MyDecoration());
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(getContext(),
+               R.anim.layout_from_bottom);
+        recyclerView_file.setLayoutAnimation(controller);
         linearLayout = view.findViewById(R.id.home_filelinlayout);
         mHeight = linearLayout.getHeight();
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //弹窗
-                showPopupWindow();
-            }
-        });
+        editText.setOnClickListener(onclick);
         btn_search = view.findViewById(R.id.home_btn_search);
         btn_scan = view.findViewById(R.id.fg_home_btn_scan);
         initData();
-
         return view;
 
+    }
+    public class Onclick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case fg_home_et:{
+                    showPopupWindow();
+                }
+            }
+        }
     }
     /**
      * 弹窗设置
@@ -111,15 +124,25 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        SearchWords searchWords = new SearchWords();
-        searchWords.text="测试";
-        list.add(searchWords);
-        FilelistBean filelistBean = new FilelistBean();
-        filelistBean.detail = "测试";
-        filelistBean.img_url = "测试";
-        beanList.add(filelistBean);
+        Bundle bundle=getArguments();
+        String path=bundle.getString("path");
+        File file = new File(path);
+
+//        SearchWords searchWords = new SearchWords();
+//        searchWords.text="测试";
+//        list.add(searchWords);
+//        FilelistBean filelistBean = new FilelistBean();
+//        filelistBean.detail = "测试";
+//        filelistBean.img_url = "测试";
+//        beanList.add(filelistBean);
 
     }
-    //private Pair<Boolean,Pair<String,String>> getLoginState(){
-    //}
+    class MyDecoration extends RecyclerView.ItemDecoration{
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            //outRect.set()中的参数分别对应左、上、右、下的间隔
+            outRect.set(20,0,20,20);
+        }
+    }
 }

@@ -2,7 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/bean_file_tv1"
         android:layout_width="match_parent"
@@ -10,10 +15,16 @@
    <RelativeLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
-       <ImageView
-           android:id="@+id/bean_file_img"
+       <TextView
+           android:id="@+id/bean_shape"
            android:layout_width="150dp"
            android:layout_height="160dp"
+           android:background="#101010"/>
+       <ImageView
+           android:layout_marginLeft="5dp"
+           android:id="@+id/bean_file_img"
+           android:layout_width="140dp"
+           android:layout_height="140dp"
            android:elevation="10dp"
            android:background="@drawable/shape_bean_file"/>
        <TextView
@@ -30,4 +41,5 @@
     android:id="@+id/bean_file_tv2"
     android:layout_width="match_parent"
     android:layout_height="20dp"/>
+    </LinearLayout>
 </LinearLayout>

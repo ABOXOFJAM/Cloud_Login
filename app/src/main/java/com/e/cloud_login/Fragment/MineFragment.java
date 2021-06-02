@@ -111,7 +111,7 @@ public class MineFragment extends BaseFragment {
      */
     private void gallery(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,REQUEST_CODE_GALLERY);
+        startActivityForResult(intent,REQUEST_CODE_GALLERY);//回调获取图片的url
     }
 
     /**
@@ -133,6 +133,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             }
+
             case REQUEST_CODE_GALLERY:{
                    if(resultCode ==RESULT_OK){
                        Log.d("PORTRAIT_TEXT","获取头像返回");

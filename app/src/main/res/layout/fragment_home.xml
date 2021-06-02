@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
         android:id="@+id/fg_home_head"
         android:layout_width="match_parent"
         android:gravity="center"
@@ -43,28 +44,22 @@
         </LinearLayout>
 
         <ImageButton
-
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
             android:id="@+id/fg_home_btn_scan"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_scan" />
+            android:background="@drawable/ic_scan" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/home_filelinlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background">
-        <GridView
-            android:id="@+id/home_gv_file"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_rv_file"
             android:paddingTop="10dp"
-            android:horizontalSpacing="10dp"
-            android:verticalSpacing="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:numColumns="2"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
 </LinearLayout>

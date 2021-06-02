@@ -7,5 +7,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <declare-styleable name="CustomProgressBar">
+        <attr name="roundProgressColor" format="color"></attr>
+        <attr name="roundColor" format="color"></attr>
+        <attr name="roundWidth" format="dimension"></attr>
+        <attr name="textSize" format="dimension"></attr>
+        <attr name="textColor" format="color"></attr>
+        <attr name="max" format="integer"></attr>
+        <attr name="textShow" format="boolean"></attr>
+        <attr name="backgroundColor" format="color"></attr>
+    </declare-styleable>
 
 </resources>

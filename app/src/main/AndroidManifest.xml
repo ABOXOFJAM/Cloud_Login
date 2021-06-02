@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.e.cloud_login">
-
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!--用于访问网络-->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <!--用于写入缓存数据到扩展存储卡-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <!--用于读取扩展存储卡文件-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -13,17 +18,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Main_Funcation.SettingActivity"></activity>
+        <activity android:name=".Main_Funcation.CanvasActivity"></activity>
+        <activity android:name=".Main_Funcation.SettingActivity" />
         <activity android:name=".Login_Funcation.PhoneLoginActivity" />
         <activity android:name=".Main_Funcation.GuideActivity" />
         <activity android:name=".Main_Funcation.SplashActivity">
+        </activity>
+        <activity android:name=".Main_Funcation.HomeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main_Funcation.HomeActivity" />
         <activity android:name=".Login_Funcation.FindPasswordActivity" />
         <activity android:name=".Login_Funcation.RegisterActivity" />
         <activity android:name=".Login_Funcation.LoginActivity" />

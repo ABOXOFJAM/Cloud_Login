@@ -10,15 +10,15 @@ public class User {
     public String password;
     public String email;
     public String photo;
-    public double space;
+    public String phone;
 
 
-    public User(String account, String md5, String email, String photo, double space) {
+    public User(String account, String md5, String email, String photo) {
         this.username =account;
         this.password=md5;
         this.email=email;
         this.photo=photo;
-        this.space=space;
+
     }
 }
 

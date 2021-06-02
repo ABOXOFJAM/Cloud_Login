@@ -5,9 +5,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
@@ -27,6 +31,7 @@ public class SplashActivity extends Activity {
     private int STORAGE_PERMISSION = 0x20;//动态申请储存权限标识
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        hide_tool();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         linearLayout=findViewById(R.id.splash_ll);
@@ -61,17 +66,17 @@ public class SplashActivity extends Activity {
     public void selectActivity(){
         SharedPreferences sharedPreferences = getSharedPreferences("登入状态",MODE_PRIVATE);
         Boolean First = sharedPreferences.getBoolean("STATE",false);//第二个参数为默认
-        //查询是否登入过
-        Intent intent =new Intent();
+       //查询是否登入过
+          Intent intent =new Intent();
         if(!First){
             intent.setClass(this, LoginActivity.class);
-        }
-        //如果登入了就直接进主页面
-        //如果登出后退出app继续进入登入页面
+       }
+       //如果登入了就直接进主页面
+       //如果登出后退出app继续进入登入页面
         //如果没注册过就进入注册界面
         else{
             intent.setClass(this, HomeActivity.class);
-        }
+             }
         /**
          * 询问储存权限
          */
@@ -97,5 +102,22 @@ public class SplashActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * 隐藏标题栏
+     */
+    public void hide_tool(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // 实现透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 }

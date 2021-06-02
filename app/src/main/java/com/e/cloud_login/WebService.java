@@ -7,6 +7,8 @@ import com.e.cloud_login.Data.JSON.DeletePackageJson;
 import com.e.cloud_login.Data.JSON.FindPassWordJson;
 import com.e.cloud_login.Data.JSON.LoadFilesJson;
 import com.e.cloud_login.Data.JSON.LoginJson;
+import com.e.cloud_login.Data.JSON.PhoneCodeJson;
+import com.e.cloud_login.Data.JSON.PhoneLoginJson;
 import com.e.cloud_login.Data.JSON.PhotoJson;
 import com.e.cloud_login.Data.JSON.RegisterJson;
 import com.e.cloud_login.Data.JSON.UploadFileJson;
@@ -26,6 +28,12 @@ import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface WebService {
+    @POST("code")
+    Call<PhoneCodeJson> getCode(@Query("phone") String phonenum,
+                                @Query("type") Integer type);//1.注册 2.修改密码 3.找回密码 4.登录
+    @POST("loginByCode")
+    Call<PhoneLoginJson> phoneLogin(@Query("code")String code,
+                                    @Query("phone")String phonenum);
     @GET("login")
     Call<LoginJson> userLogin(@Query("username") String username ,
                               @Query("password") String password);//登入请求
@@ -90,6 +98,14 @@ public interface WebService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
          WebService accountService =retrofit.create(WebService.class);
+        return accountService;
+    }
+    static WebService create(Gson gson){//Retrofit的实例化
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://47.115.128.193:8081/")//baseurl
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        WebService accountService =retrofit.create(WebService.class);
         return accountService;
     }
 }
