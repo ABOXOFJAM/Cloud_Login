@@ -3,13 +3,18 @@ package com.e.cloud_login.Main_Funcation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.FragmentTransaction;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -18,14 +23,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.e.cloud_login.Data.JSON.UserJson;
 import com.e.cloud_login.Fragment.FindFragment;
 import com.e.cloud_login.Fragment.HomeFragment;
 import com.e.cloud_login.Fragment.MineFragment;
 import com.e.cloud_login.Fragment.MessageFragment;
+import com.e.cloud_login.Main_Funcation.Pan_Funcation.PanRepositroy;
 import com.e.cloud_login.Main_Funcation.Pan_Funcation.RealPathFromUriUtils;
 import com.e.cloud_login.R;
 import com.google.android.material.tabs.TabLayout;
@@ -35,14 +46,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity  {
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Button button;
     private List<Fragment> fragmentList;
-    private final int ADD_PDF_CODE = 0x01;
-    private String[] titles = {"首页","发现","消息","我的"};
-    @Override
+    private String[] titles = {"首页","发现","我的"};
+    private String path;
+    private SharedPreferences getuserinfo;
+    private SharedPreferences.Editor wrtieuserinfo;
+    private PanRepositroy panRepositroy =new PanRepositroy();
+    private UserJson user;
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         hide_tool();
         super.onCreate(savedInstanceState);
@@ -52,28 +66,30 @@ public class HomeActivity extends AppCompatActivity {
         }
         viewPager =findViewById(R.id.home_vp);
         tabLayout =findViewById(R.id.home_tablayout);
-        button = findViewById(R.id.home_add);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/pdf");
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(intent,ADD_PDF_CODE);
-            }
-        });
         initData();
-
     }
 
     /**
      * 添加PagerView里的Fragment碎片
      */
     public void initData(){
+        getuserinfo = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String phone =getuserinfo.getString("phone",null);
+        String token = getuserinfo.getString("token",null);
+        wrtieuserinfo = getSharedPreferences("userinfo",MODE_PRIVATE).edit();
+        //获取用户信息
+        user = panRepositroy.loadUserinfo(phone);
+        if(user.code==200){//提交用户数据
+            wrtieuserinfo.putString("id",user.data.id);
+            wrtieuserinfo.putString("photo",user.data.photo);
+            wrtieuserinfo.putString("username",user.data.username);
+            wrtieuserinfo.putString("introduction",user.data.introduction);
+            wrtieuserinfo.commit();
+        }
         fragmentList = new ArrayList<>();
         fragmentList.add(new HomeFragment());
         fragmentList.add(new FindFragment());
-        fragmentList.add(new MessageFragment());
+        //fragmentList.add(new MessageFragment());
         fragmentList.add(new MineFragment());
         MainTabAdapter mainTabAdapter = new MainTabAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainTabAdapter);
@@ -102,6 +118,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+
     /**
      * TabLayout的适配器
      */
@@ -117,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                 case 0: return fragmentList.get(0);
                 case 1: return fragmentList.get(1);
                 case 2: return fragmentList.get(2);
-                case 3: return fragmentList.get(3);
+//                case 3: return fragmentList.get(3);
                 default: return fragmentList.get(0);
             }
         }
@@ -144,12 +162,23 @@ public class HomeActivity extends AppCompatActivity {
                     imageView.setImageResource(R.drawable.ic_compass);
                     break;
                 }
+//                case 2:{
+//                    imageView.setImageResource(R.drawable.ic_message);
+//                    break;
+//                }
                 case 2:{
-                    imageView.setImageResource(R.drawable.ic_message);
-                    break;
-                }
-                case 3:{
-                    imageView.setImageResource(R.drawable.cathead);
+                    if(user.data!=null) {
+                        Glide.with(getApplicationContext())
+                                .load(user.data.photo)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .placeholder(R.drawable.error3)
+                                .error(R.drawable.error1)
+                                .centerCrop()
+                                .into(imageView);
+                    }
+                    else{
+                        imageView.setImageResource(R.drawable.error1);
+                    }
                     break;
                 }
                 default:
@@ -179,32 +208,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case ADD_PDF_CODE: {
-                if(resultCode == RESULT_OK){
-                Uri uri = data.getData();
-                Log.d("TAG",uri.toString());
-                if(uri!=null){
-                    String path = RealPathFromUriUtils.getRealPathFromUri(this,uri);
-                   // File file = new File(path);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("path",path);
-                    fragmentList.get(0).setArguments(bundle);
-                    android.app.FragmentManager fm = getFragmentManager();
-                    FragmentTransaction ft=fm.beginTransaction();
-                    ft.commit();
-                    //Intent intent = new Intent(getApplicationContext(),CanvasActivity.class).putExtra("path", path);
-                    //startActivity(intent);
-                }
-
-                break;
-                }
-            }
-            default:
-                throw new IllegalStateException("Unexpected value: " + requestCode);
-        }
+    /**
+     * 利用fragment的生命周期attach方法
+     * @return
+     */
+    public String getValue(){
+        return path;
     }
+
+
 }

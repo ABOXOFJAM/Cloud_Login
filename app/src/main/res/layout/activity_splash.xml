@@ -20,7 +20,7 @@
            android:textColor="@color/black"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="打开XX，寻你所求"
+           android:text="打开白茶，寻你所求"
            android:textSize="20dp"
            android:gravity="center"/>
    </LinearLayout>

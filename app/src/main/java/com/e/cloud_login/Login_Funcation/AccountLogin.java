@@ -1,6 +1,7 @@
 package com.e.cloud_login.Login_Funcation;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -11,7 +12,6 @@ import com.e.cloud_login.Data.JSON.LoginJson;
 import com.e.cloud_login.Data.JSON.PhoneCodeJson;
 import com.e.cloud_login.Data.JSON.PhoneLoginJson;
 import com.e.cloud_login.Data.JSON.PhotoJson;
-import com.e.cloud_login.Data.JSON.RegisterJson;
 import com.e.cloud_login.Data.User;
 import com.e.cloud_login.Main_Funcation.Pan_Funcation.PanRepositroy;
 import com.e.cloud_login.R;
@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -46,8 +47,8 @@ public class AccountLogin
     private WebService accountService = WebService.create();//接口的创建
     private  Integer REPEAT_WRONG = 0;
     private  Integer EXIST_WRONG = 1;
-    private Integer SUCCESS = 3;
-    private Integer INTERNET = 4;
+    private Integer SUCCESS = 2;
+    private Integer INTERNET = 3;
 
     /**
      * 获取验证码
@@ -105,7 +106,7 @@ public class AccountLogin
                 public void run() {
                     try {
                         Call<PhoneLoginJson> phonelogin = loginService.phoneLogin(code,phone);
-                        Log.d("TAG",phonelogin.execute().body().data.toString());
+                     //   Log.d("TAG",phonelogin.execute().body().data.toString());
                         PhoneLoginJson body = phonelogin.execute().body();
                         phonetoken[0] =body.data;
                     } catch (IOException e) {
@@ -137,21 +138,6 @@ public class AccountLogin
 
         }
         }
-     /******注册功能的实现******/
-     RegisterJson accountRegister(String account,String pwd,String email) {
-         User user = new User(account, pwd, email, "");
-         Call<RegisterJson> register = accountService.userRegiser(user.username, user.password, user.email);
-         RegisterJson res = null;
-         try {
-             res = register.execute().body();
-             Log.i("注册是否成功", res.toString());
-         } catch (Exception e) {
-
-         }
-         return res;
-     }
-     /*******忘记密码的实现*****/
-
     /**
      * 在该目录下新建目录
      */
@@ -169,21 +155,35 @@ public class AccountLogin
     /**
      * 头像上传函数
      */
-    public PhotoJson accountPhoto(Context context, MultipartBody.Part photo, String username){
-        PhotoJson res = null;
-        Boolean connect = true;
-        Call<PhotoJson> upload =accountService.userPhoto(photo,username);
+    public PhotoJson accountPhoto(Context context, Uri photo, String id){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(PhotoJson.class,new PhotoJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        WebService webService = WebService.create(gson);
+         File file = new File(photo.getPath());
+        RequestBody requetFile = RequestBody.create(MediaType.parse("multipart/for-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requetFile);
+        final PhotoJson[] response = {new PhotoJson()};
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Call<PhotoJson> upload =webService.updataPhoto(id,body);
+                    response[0] = upload.execute().body();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         try{
-           PhotoJson body =upload.execute().body();
-            Log.d("PHOTO_UPLOAD",body.toString());
-            if(body.status =="success") res=body;
-        } catch (ConnectException e) {
-            connect = false;
-        } catch (IOException e) {
+            thread.start();
+            thread.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if(!connect) Toast.makeText(context, "连接服务器失败", Toast.LENGTH_SHORT).show();
-        return res;
+        return response[0];
     }
 
     /**

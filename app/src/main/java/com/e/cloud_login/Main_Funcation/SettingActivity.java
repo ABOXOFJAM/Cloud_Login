@@ -14,11 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.e.cloud_login.Login_Funcation.LoginActivity;
+import com.e.cloud_login.Login_Funcation.PhoneLoginActivity;
 import com.e.cloud_login.R;
 
 public class SettingActivity extends AppCompatActivity {
@@ -58,10 +56,10 @@ public class SettingActivity extends AppCompatActivity {
             Intent intent = new Intent();
             switch(v.getId()){
                 case R.id.setting_btn_out:{
-                    SharedPreferences.Editor userinfo = SettingActivity.this.getSharedPreferences("登入状态", Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor userinfo = SettingActivity.this.getSharedPreferences("userinfo", Context.MODE_PRIVATE).edit();
                     userinfo.clear();
                     userinfo.apply();
-                    intent.setClass(SettingActivity.this, LoginActivity.class);
+                    intent.setClass(SettingActivity.this, PhoneLoginActivity.class);
                     startActivity(intent);
                     finish();
                     break;

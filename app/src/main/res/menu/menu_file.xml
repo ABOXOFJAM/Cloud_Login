@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/removeItem"
+        android:title="删除该文件"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/uploadItem"
+        android:title="上传到【我的】"
+        app:showAsAction="never"/>
+</menu>

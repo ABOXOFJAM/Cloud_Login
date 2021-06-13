@@ -1,29 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#000"
     android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_weight="1"
+    <LinearLayout
+        android:id="@+id/canvas_toolbar"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_swap_left_white"
+            android:id="@+id/canvas_btn_out"/>
+        <LinearLayout
+            android:layout_weight="9999"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"/>
+        <ImageButton
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_more"
+            android:id="@+id/canvas_btn_more"/>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_weight="9999"
+        android:id="@+id/canvas_cv"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="20dp"
         android:layout_height="match_parent">
         <com.github.barteksc.pdfviewer.PDFView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/canvas_pdf"/>
-
         <com.e.cloud_login.Main_Funcation.Pan_Funcation.HandWrite
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_height="match_parent"
             android:id="@+id/canvas_handwrite"/>
-
-
-    </RelativeLayout>
-
+    </androidx.cardview.widget.CardView>
     <Button
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="清除画布"
-        android:id="@+id/canvas_btn_clear"/>
+        android:text="完成"
+        android:visibility="gone"
+        android:textColor="#101010"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:id="@+id/canvas_btn_ok"/>
 </LinearLayout>

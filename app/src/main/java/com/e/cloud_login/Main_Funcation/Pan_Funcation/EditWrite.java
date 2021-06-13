@@ -7,7 +7,7 @@ import android.widget.EditText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Edit {
+public class EditWrite {
     /**
      * 禁止EditText输入空格
      * @param editText

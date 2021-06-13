@@ -15,12 +15,14 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.e.cloud_login.Login_Funcation.LoginActivity;
+import com.e.cloud_login.Login_Funcation.PhoneLoginActivity;
 import com.e.cloud_login.R;
 
 import java.lang.reflect.Array;
@@ -28,7 +30,6 @@ import java.util.Arrays;
 
 public class SplashActivity extends Activity {
     private LinearLayout linearLayout;
-    private int STORAGE_PERMISSION = 0x20;//动态申请储存权限标识
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         hide_tool();
@@ -64,12 +65,12 @@ public class SplashActivity extends Activity {
         });
     }
     public void selectActivity(){
-        SharedPreferences sharedPreferences = getSharedPreferences("登入状态",MODE_PRIVATE);
-        Boolean First = sharedPreferences.getBoolean("STATE",false);//第二个参数为默认
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        String token = sharedPreferences.getString("token",null);//第二个参数为默认
        //查询是否登入过
           Intent intent =new Intent();
-        if(!First){
-            intent.setClass(this, LoginActivity.class);
+        if(token==null){
+            intent.setClass(this, PhoneLoginActivity.class);
        }
        //如果登入了就直接进主页面
        //如果登出后退出app继续进入登入页面
@@ -77,31 +78,8 @@ public class SplashActivity extends Activity {
         else{
             intent.setClass(this, HomeActivity.class);
              }
-        /**
-         * 询问储存权限
-         */
-        requestStoragePermission();
         startActivity(intent);
         finish();
-    }
-    private void requestStoragePermission(){
-        int hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        Log.e("TAG","开始$hasCameraPermission");
-        if(hasCameraPermission == PackageManager.PERMISSION_GRANTED){
-            //拥有权限
-            Log.e("TAG","已经授权权限");
-        }else{
-            //没权限，向用户申请权限
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                Log.e("TAG","向用户申请该组权限");
-                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},0x20);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

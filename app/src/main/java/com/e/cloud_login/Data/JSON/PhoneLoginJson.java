@@ -1,5 +1,7 @@
 package com.e.cloud_login.Data.JSON;
 
+import android.net.http.HttpResponseCache;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,7 +13,10 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
+import okhttp3.MediaType;
 import okhttp3.ResponseBody;
+import okhttp3.internal.http.RealResponseBody;
+import okio.BufferedSource;
 
 public class PhoneLoginJson{
     public int code;
@@ -20,30 +25,28 @@ public class PhoneLoginJson{
     public static class DataStateDeserializer implements JsonDeserializer<PhoneLoginJson>{//反序列号适配器
         @Override
         public PhoneLoginJson deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            PhoneLoginJson response = new Gson().fromJson(json,PhoneLoginJson.class);
+            PhoneLoginJson response = new PhoneLoginJson();
             JsonObject jsonObject = json.getAsJsonObject();
-            if(jsonObject.has("data")){
-                JsonElement elem = jsonObject.get("data");
+            int code = jsonObject.get("code").getAsInt();
+            if(code==200){
+                response.code = 200;
+            if(jsonObject.has("msg")){
+                JsonElement elem = jsonObject.get("msg");
                 if(elem!=null&& !elem.isJsonNull()){
-                    if(elem.isJsonPrimitive()) response.msg = elem.toString();
-                    else{
-                        if(elem.getAsJsonObject().has("token")){
-                            response.data = elem.getAsJsonObject().get("token").toString();
+                    response.msg = elem.toString();
+                    JsonObject jsondata =  jsonObject.get("data").getAsJsonObject();
+                        if(jsondata.has("token")){
+                            response.data = jsondata.get("token").getAsString();
                         }
                     }
                 }
-
+            }
+            else {
+                response.code = code;
+                response.msg = jsonObject.get("msg").getAsString();
+                response.data =null;
             }
             return response;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "PhoneLoginJson{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data='" + data + '\'' +
-                '}';
+     }
     }
 }

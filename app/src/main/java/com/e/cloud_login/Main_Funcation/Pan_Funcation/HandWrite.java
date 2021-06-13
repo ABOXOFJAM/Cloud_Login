@@ -1,4 +1,4 @@
-package com.e.cloud_login.Main_Funcation.Pan_Funcation;
+                package com.e.cloud_login.Main_Funcation.Pan_Funcation;
 
 import android.content.Context;
 import android.content.Intent;
@@ -41,10 +41,10 @@ public class HandWrite extends View {
     static int  mScreenHeight;
     Matrix mMatrix = new Matrix();
     int photo;
+    Bitmap mBitmap;
     /**
      * 构造方法
      */
-
     public HandWrite(Context context, AttributeSet attrs) {
         super(context,attrs);
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -52,7 +52,8 @@ public class HandWrite extends View {
         int mScreenHeight = dm.heightPixels;
 
         //从资源中获取原始图像
-        origBit = BitmapFactory.decodeResource(getResources(),R.drawable.background).copy(Bitmap.Config.ARGB_8888,true);
+        //origBit = BitmapFactory.decodeResource(getResources(),R.drawable.background).copy(Bitmap.Config.ARGB_8888,true);
+        origBit = Bitmap.createBitmap(mScreenWidth,mScreenHeight,Bitmap.Config.ARGB_8888);
         origBit = Bitmap.createScaledBitmap(origBit, mScreenWidth, mScreenHeight, true);
         //建立原始图像的位图
         new_1Bit = Bitmap.createBitmap(origBit);
@@ -65,40 +66,6 @@ public class HandWrite extends View {
         isClear = true;
         new_2Bit = Bitmap.createBitmap(origBit);
         invalidate();
-    }
-    /**
-     * 保存函数
-     */
-    public void save(){
-        //保存图片
-        File appDir = new File(Environment.getExternalStorageState(),"Boohee");
-        if(!appDir.exists()){
-            appDir.mkdir();
-        }
-        String fileName = System.currentTimeMillis()+".jpg";
-        File file = new File(appDir,fileName);
-        try{
-            FileOutputStream fos = new FileOutputStream(file);
-            new_1Bit.compress(Bitmap.CompressFormat.JPEG,100,fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //其次把文件插件到系统图库
-        Context context = getContext();
-        try{
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(),fileName,null);
-            Log.d("TAG",file.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(file.getAbsolutePath())));
-        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
     }
     /**
      * 设置笔的宽度
@@ -118,7 +85,9 @@ public class HandWrite extends View {
         canvas.drawBitmap(HandWriting(new_1Bit),0,0,null);
         //画布是100%匹配view的
     }
-
+    public Bitmap getmBitmap(){
+        return new_1Bit;
+    }
     /**
      * 绘制方法
      * @param newBit

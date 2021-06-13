@@ -11,10 +11,9 @@
         android:gravity="center"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/login_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="欢迎来到XX"
+            android:text="欢迎来到白茶"
             android:textSize="40dp"
             android:textColor="@color/black"
             android:layout_marginTop="50dp"
@@ -48,37 +47,6 @@
         android:inputType="textPassword"
         android:maxLines="1"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:padding="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_function"
-        android:orientation="horizontal" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="找回密码"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            android:id="@+id/tv_findpwd"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注册"
-            android:textSize="20dp"
-            android:layout_weight="1"
-            android:id="@+id/tv_register"/>
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="手机号登入"
-            android:textSize="20dp"
-            android:id="@+id/login_tv_phone"/>
-
-    </LinearLayout>
-
     <Button
         android:layout_marginTop="100dp"
         android:layout_width="match_parent"

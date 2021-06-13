@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:gravity="center"
     android:background="@drawable/background"
     android:orientation="vertical">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +26,7 @@
             android:layout_marginBottom="50dp"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/phonelogin_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -93,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="未注册的手机号验证后将自动创建XX账号"
+            android:text="未注册的手机号验证后将自动创建账号"
             android:id="@+id/phonelogin_tv_message1"/>
         <Button
             android:id="@+id/phonelogin_btn_login"
@@ -128,5 +134,6 @@
                     android:textColor="#C8C8C8"
                     android:id="@+id/phonelogin_tv_agreement"/>
             </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

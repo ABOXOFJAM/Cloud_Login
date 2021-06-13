@@ -2,22 +2,29 @@ package com.e.cloud_login.Main_Funcation.Pan_Funcation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.e.cloud_login.Data.FileData;
-import com.e.cloud_login.Data.JSON.ChangeFileNameJson;
-import com.e.cloud_login.Data.JSON.CreatePackageJson;
 import com.e.cloud_login.Data.JSON.DeleteFileJson;
-import com.e.cloud_login.Data.JSON.DeletePackageJson;
-import com.e.cloud_login.Data.JSON.LoadFilesJson;
-import com.e.cloud_login.Data.JSON.UploadFileJson;
+import com.e.cloud_login.Data.JSON.FileBean;
+import com.e.cloud_login.Data.JSON.FileJson;
+import com.e.cloud_login.Data.JSON.FileListJson;
+import com.e.cloud_login.Data.JSON.FilePhotoJson;
+import com.e.cloud_login.Data.JSON.PhoneLoginJson;
+import com.e.cloud_login.Data.JSON.UserJson;
+import com.e.cloud_login.Data.User;
 import com.e.cloud_login.Login_Funcation.AccountLogin;
 import com.e.cloud_login.WebService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,7 +36,9 @@ import java.util.List;
 import java.util.Stack;
 
 import kotlin.UByteArray;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,268 +59,159 @@ public class PanRepositroy {
         flushCheck.setValue(false);
         selectedCount.setValue(0);
     }
-    void selectedItemAdd(FileData fileData){
-        selectedItem.add(fileData);
-        selectedCount.setValue(selectedItem.size());
-    }
-    void selectedItemRemove(FileData fileData){
-        selectedItem.remove(fileData);
-        selectedCount.setValue(selectedItem.size());
-    }
-    boolean selectedItemExists(FileData  fileData){
-        return selectedItem.contains(fileData);
-    }
-    void selectedItemAddAll(List<FileData> fileData){
-        for (FileData file: fileData) {
-            if(!selectedItemExists(file)) selectedItemAdd(file);
-        }
-    }
-    void selectedItemRemoveAll(List<FileData> fileData){
-        for (FileData file: fileData
-             ) {
-            if(selectedItemExists(file)) selectedItemRemove(file);
-        }
-    }
-    /*******请求加载服务器上的文件信息*******/
-    Pair<Boolean,List<FileData>> loadFileInformation (Context context,String username,String parentFile) throws IOException {
-        List<FileData> res = null;//存URL父路径下的文件信息
-        boolean success =true;
-        Call<LoadFilesJson> fileInfo =null;
+    public String uploadFile(String fileUrl, String id, String photoUrl,String title,int isPublic){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(FileJson.class,new FileJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        final String[] msg = {new String()};
+        File file = new File(fileUrl);
+        WebService webService =WebService.create(gson);
+        RequestBody requetFile = RequestBody.create(MediaType.parse("multipart/for-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requetFile);
         try{
-            fileInfo =panService.getFileInformation(username,parentFile,token);
-        }catch (Exception e){
-            success = false;
-        }
-        if(success){
-                    LoadFilesJson body = null;
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Call<FileJson> upload = webService.uploadFile(body,id,isPublic,photoUrl,title);
                     try {
-                        body = fileInfo.execute().body();
+                        FileJson fileJson = upload.execute().body();
+                        msg[0] = fileJson.msg;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    switch (body.getFileInformationStatus){
-                        case "success":{
-                            res =body.file_data_list;
-                            success = true;
-                            break;
-                        }
-                        case "ParentFileWrong":{
-                            success = false;
-                        }
-                    }
                 }
-         if(success){
-             flushCheck.setValue(true);
+            });
+            try{
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-       return new Pair<>(success,res);
+        return msg[0];
     }
-    void uploadFile(Context context, MultipartBody.Part file,String username,String parentFile){
-        Call<UploadFileJson> upload = panService.uploadFile(file,username,parentFile);
-        upload.enqueue(new Callback<UploadFileJson>(){//请求回调
-            @Override
-            public void onResponse(Call<UploadFileJson> call, Response<UploadFileJson> response) {
-              UploadFileJson body = response.body();
-              if(body != null){
-                  switch (body.status){
-                      case "success":{
-                          Toast.makeText(context,"上传成功，用时${body.status}ms",Toast.LENGTH_SHORT).show();
-                          flushCheck.setValue(true);
-                          break;
-                      }
-                      case "EmptyWrong":{
-                          Toast.makeText(context,"文件为空",Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      case "FullOrUserWrong":{
-                          Toast.makeText(context,"用户云盘空间已满或用户不存在",Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      case "FileNameWrong":{
-                          Toast.makeText(context,"文件名为空",Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      case "FileTypeWrong":{
-                          Toast.makeText(context,"文件类型不支持",Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      case "InternetWrong":{
-                          Toast.makeText(context,"网络错误",Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      default: Toast.makeText(context,"未知错误",Toast.LENGTH_SHORT).show();
-                  }
-              }
-            }
-
-            @Override
-            public void onFailure(Call<UploadFileJson> call, Throwable t) {
-                Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-            }
-        });
+    public UserJson loadUserinfo(String phone){
+        Gson gson =  new GsonBuilder()
+                .registerTypeAdapter(UserJson.class, new UserJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        WebService panservice = WebService.create(gson);
+        final UserJson[] body = {new UserJson()};
+         Thread thread = new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 try {
+                     Call<UserJson> call = panservice.loadUserInfo(phone);
+                     body[0] = call.execute().body();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+             }
+         });
+         try{
+             thread.start();
+             thread.join();
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         return body[0];
     }
-    void deleteFile(Context context,String username,String url){
-        Call<DeleteFileJson> delete = panService.deleteFile(username,url,token);
-        delete.enqueue(new Callback<DeleteFileJson>() {
-            @Override
-            public void onResponse(Call<DeleteFileJson> call, Response<DeleteFileJson> response) {
-                DeleteFileJson body = response.body();
-                if(body!=null){
-                    switch (body.status){
-                        case "success":{
-                            Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
-                            flushCheck.setValue(true);
-                            break;
-                        }
-                        case "UrlWrong":{
-                            Toast.makeText(context,"url不匹配",Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        case "DeleteWrong":{
-                            Toast.makeText(context,"服务器删除文件内部错误",Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        case "FileWrong":{
-                            Toast.makeText(context,"文件不存在",Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        case "TokenWrong":{
-                            Toast.makeText(context,"登入时间过长,Token失效,请重新登入",Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        default: Toast.makeText(context,"未知错误",Toast.LENGTH_SHORT).show();
+    public FilePhotoJson savePhoto(byte[] photo){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(FilePhotoJson.class,new FilePhotoJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        Bitmap bitmap = FileUtil.BytesToBitmap(photo);
+        File file = FileUtil.compressImage(bitmap);
+        RequestBody requetFile = RequestBody.create(MediaType.parse("multipart/for-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requetFile);
+        final FilePhotoJson[] filePhotoJson = {new FilePhotoJson()};
+        WebService webService = WebService.create(gson);
+        try{
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Call<FilePhotoJson> savephoto = webService.updataFilePhoto(body);
+                        filePhotoJson[0] = savephoto.execute().body();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+            });
+            try{
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public void onFailure(Call<DeleteFileJson> call, Throwable t) {
-                Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filePhotoJson[0];
     }
-    void deletePackage(Context context,String username,String url){
-      Call<DeletePackageJson> delete = panService.deletePackage(username,url,token);
-      delete.enqueue(new Callback<DeletePackageJson>() {
-          @Override
-          public void onResponse(Call<DeletePackageJson> call, Response<DeletePackageJson> response) {
-              DeletePackageJson body = response.body();
-              if(body !=null){
-                  switch (body.status){
-                      case "success":{
-                          Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
-                          flushCheck.setValue(true);
-                          break;
-                      }
-                      case "TokenWrong":{
-                          Toast.makeText(context, "登入时间过长，Token失效", Toast.LENGTH_SHORT).show();
-                          break;
-                      }
-                      default:Toast.makeText(context,"未知错误",Toast.LENGTH_SHORT).show();
-                  }
-              }
-          }
-
-          @Override
-          public void onFailure(Call<DeletePackageJson> call, Throwable t) {
-                   Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-          }
-      });
-    }
-    void createPackage(Context context,String username,String package_name,String parentFile){
-        Call<CreatePackageJson> create = panService.createPackage(username,package_name,parentFile,token);
-        create.enqueue(new Callback<CreatePackageJson>() {
-            @Override
-            public void onResponse(Call<CreatePackageJson> call, Response<CreatePackageJson> response) {
-                CreatePackageJson body = response.body();
-                if(body!=null){
-                    switch (body.status){
-                        case "success":{
-                            Toast.makeText(context,"创建成功",Toast.LENGTH_SHORT).show();
-                            flushCheck.setValue(true);
-                            break;
-                        }
-                        case "TokenWrong":{
-                            Toast.makeText(context,"登入时间过长，Token失效，请重新登入",Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        default:Toast.makeText(context,"未知错误",Toast.LENGTH_SHORT).show();
+    public FileListJson getFileList(int cnt,String id,int orderType,int page){
+        Gson gson = new GsonBuilder()
+                       .registerTypeAdapter(FileListJson.class,new FileListJson.DataStateDeserializer())
+                       .setLenient()
+                       .create();
+        final FileListJson[] body = {new FileListJson()};
+        WebService webService = WebService.create(gson);
+        try{
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Call<FileListJson> getFile = webService.getFile(cnt,id,orderType,page);
+                        body[0] = getFile.execute().body();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+            });
+            try{
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public void onFailure(Call<CreatePackageJson> call, Throwable t) {
-                      Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-            }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return body[0];
     }
-    void downloadFile(Context context,String username ,String url,String filename){
-        Call<ResponseBody> download = panService.downloadFile(username,url,token);
-        download.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                ResponseBody body = response.body();
-                if(body!=null){
-                    String fe = filename;
-                    int i = 1;
-                    String[] hp = filename.split(".");
-                    while(new File("$DOWNLOAD_PATH/$fe").exists()){
-                        fe= "${hp[0]}(${i}).${hp[i]}";
-                                i+=1;
+    public FileListJson getServerFileList(int cnt,int orderType,int page){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(FileListJson.class,new FileListJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        final FileListJson[] body = {new FileListJson()};
+        WebService webService = WebService.create(gson);
+        try{
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Call<FileListJson> getFile = webService.getServerFile(cnt,"pdf",orderType,page);
+                        body[0] = getFile.execute().body();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    writeResponseBodyToDisk(body,"$DOWNLOAD_PATH/$fe");
-                    Toast.makeText(context,"下载成功",Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    Toast.makeText(context,"下载失败",Toast.LENGTH_SHORT).show();
-                }
+            });
+            try{
+                thread.start();
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                  Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    void changeFilename(Context context,String username,String newFilename,String url){
-       Call<ChangeFileNameJson> change = panService.changeFilename(username,newFilename,url,token);
-       change.enqueue(new Callback<ChangeFileNameJson>() {
-           @Override
-           public void onResponse(Call<ChangeFileNameJson> call, Response<ChangeFileNameJson> response) {
-               ChangeFileNameJson body =response.body();
-               if (body!=null){
-                   switch (body.status){
-                       case "success":{
-                           Toast.makeText(context,"修改成功",Toast.LENGTH_SHORT).show();
-                           flushCheck.setValue(true);
-                           break;
-                       }
-                       case "UrlWrong":{
-                           Toast.makeText(context,"文件路径错误",Toast.LENGTH_SHORT).show();
-                           break;
-                       }
-                       case "UserWrong":{
-                           Toast.makeText(context,"文件不属于该用户",Toast.LENGTH_SHORT).show();
-                           break;
-                       }
-                       case "RepeatWrong":{
-                           Toast.makeText(context,"文件名重复",Toast.LENGTH_SHORT).show();
-                           break;
-                       }
-                       case "TokenWrong":{
-                           Toast.makeText(context,"登入时间过长,Token失效，请重新登入",Toast.LENGTH_SHORT).show();
-                           break;
-                       }
-                       default:Toast.makeText(context,"未知错误",Toast.LENGTH_SHORT).show();
-                   }
-               }
-           }
-
-           @Override
-           public void onFailure(Call<ChangeFileNameJson> call, Throwable t) {
-               Toast.makeText(context,"服务器无响应",Toast.LENGTH_SHORT).show();
-           }
-       });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return body[0];
     }
     public Boolean writeResponseBodyToDisk(ResponseBody body,String filepath){
         try {
@@ -346,5 +246,70 @@ public class PanRepositroy {
             e.printStackTrace();
             return false;
         }
+    }
+    public String DeleteFile(String id,String number){
+        final String[] msg = new String[1];
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(DeleteFileJson.class,new DeleteFileJson.DataStateDeserializer())
+                .setLenient()
+                .create();
+        WebService webService = WebService.create(gson);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Call<DeleteFileJson> delete = webService.deleteFile(id,number);
+                    DeleteFileJson body = delete.execute().body();
+                    msg[0] = body.msg;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        try {
+            thread.start();
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return msg[0];
+    }
+    public String Download(String phone_url, FileBean fileBean){
+        Uri uri = Uri.parse(fileBean.url);
+        final String[] msg = new String[1];
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Call<ResponseBody> download = panService.download(uri);
+                    ResponseBody body = download.execute().body();
+                    if(download == null){
+                        msg[0] = "fail";
+                    }
+                    else{
+                        byte[] bys = new byte[0];
+                        bys = body.bytes();
+                        FileUtil.byteArrayToFile(bys,phone_url,fileBean.fileName);//创建文件
+                        File file = new File(phone_url+"/DOWNLOAD_PDF/"+fileBean.fileName);
+                        if(file.exists()){
+                            msg[0] = "success";
+                        }
+                        else {
+                            msg[0] = "makefail";
+                        }
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        try{
+            thread.start();
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return msg[0];
     }
 }

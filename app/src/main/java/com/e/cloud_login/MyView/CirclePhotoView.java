@@ -1,4 +1,4 @@
-package com.e.cloud_login.Main_Funcation.Pan_Funcation;
+package com.e.cloud_login.MyView;
 
 
 import android.content.Context;
@@ -115,3 +115,4 @@ public class CirclePhotoView extends View {
         }
     }
 }
+
