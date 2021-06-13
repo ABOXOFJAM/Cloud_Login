@@ -32,6 +32,7 @@ public class PhoneLoginActivity extends Activity {
     Button btn_token,btn_login;
     private LinearLayout linearLayout;
     private Integer TYPE_LOGIN = 4;
+    private Integer TYPE_REGISTER = 1;
     private TimeCount time ;
     AccountLogin accountLogin =  new AccountLogin();
     @Override
@@ -49,7 +50,7 @@ public class PhoneLoginActivity extends Activity {
                 break;
             }
             case 1:{
-                Toast.makeText(PhoneLoginActivity.this,"验证码已过期",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"手机号不存在",Toast.LENGTH_SHORT).show();
                 break;
             }
             case 2:{

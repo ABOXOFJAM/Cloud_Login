@@ -108,7 +108,9 @@ public class AccountLogin
                         Call<PhoneLoginJson> phonelogin = loginService.phoneLogin(code,phone);
                      //   Log.d("TAG",phonelogin.execute().body().data.toString());
                         PhoneLoginJson body = phonelogin.execute().body();
-                        phonetoken[0] =body.data;
+                        if(body.code==200) {
+                            phonetoken[0] = body.data;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

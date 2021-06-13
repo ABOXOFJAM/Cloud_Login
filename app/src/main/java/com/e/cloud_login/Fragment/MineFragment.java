@@ -52,6 +52,7 @@ import com.e.cloud_login.R;
 import org.litepal.LitePal;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -85,6 +86,7 @@ public class MineFragment extends BaseFragment {
     private PanRepositroy panRepositroy = new PanRepositroy();
     private SharedPreferences getuserinfo;
     private SharedPreferences.Editor writeuserinfo;
+    private List<FileBean> beanList = new ArrayList<>();
     @Override
     public View initView() {
         View view = View.inflate(getActivity(), layout.fragment_mine,null);
@@ -152,8 +154,8 @@ public class MineFragment extends BaseFragment {
         linearLayout.setAnimation(animation);
         //从服务端接收初始化listBean
         filelistBean = panRepositroy.getFileList(6,getuserinfo.getString("id",null),1,1);
-        List<FileBean> beanList = filelistBean.fileList;
-        if(beanList != null) {
+        if(filelistBean!=null){
+        beanList = filelistBean.fileList;
             adapter = new ResultListBeanAdapter(beanList);
             final Boolean[] longPress = {false};
             adapter.setOnItemClickListener(new ResultListBeanAdapter.MyItemClickListener() {

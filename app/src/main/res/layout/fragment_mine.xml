@@ -39,13 +39,18 @@
                 android:text="今天又是快乐学学习的一天!"
                 android:textColor="#D5D5D5"/>
             </LinearLayout>
-
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="10dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp">
                 <ImageView
                     android:id="@+id/fg_mine_head"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:src="@drawable/error3"
                     />
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
         </LinearLayout>
        <LinearLayout

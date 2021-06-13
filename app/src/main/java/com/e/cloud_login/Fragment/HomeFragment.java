@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -325,6 +327,9 @@ public class HomeFragment extends BaseFragment {
                     filelistBean.title = fileinfo.getString("title","标题");
                     filelistBean.img_url = pdf_path;
                     filelistBean.isPublic = isPublic;
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.error2);
+                    byte[] bytes = FileUtil.BitmapToBytes(bitmap);
+                    filelistBean.img = bytes;
                     beanList.add(filelistBean);
                     adapter.notifyDataSetChanged();
                     filelistBean.save();
